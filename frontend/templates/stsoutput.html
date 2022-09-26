@@ -1,0 +1,83 @@
+{% extends 'sts.html' %}
+
+{% block output %}
+    
+    <h1>Gantt Chart:</h1>
+    <div class="d-flex flex-wrap mb-3 mx-5 justify-content-between bg-info">
+        {% for section in gantt %}
+        <div class="d-flex flex-fill mt-1 mb-1 mx-1 p-2 bg-primary">
+
+            <sub class="me-3 align-self-end">{{ section.sT }}</sub>
+            <h5 class="align-self-center text-center flex-fill">
+                
+                    {% if section.process == "Idle" %}
+                    {{ section.process }}
+                    {% else %}
+                    {{ section.process.name}}
+                    {% endif %}
+            </h5>
+            <sub class="ms-3 align-self-end">{{ section.endT }}</sub>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h1>Process Table:</h1>
+
+    <table class="table table-striped table-warning">
+        <thead>
+            <tr>
+                <th scope="col">Process</th>
+                <th scope="col">Arrival Time</th>
+                <th scope="col">Burst Time</th>
+                {% if algo == "prio" %}
+                <th scope="col">Priority</th>
+                {% endif %}
+                <th scope="col">Completion Time</th>
+                <th scope="col">Turnaround Time</th>
+                <th scope="col">Waiting Time</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for process in pool %}
+            <tr>
+                <th scope="row">{{ process.name }}</th>
+                <td>{{ process.arrivalTime }}</td>
+                <td>{{ process.serviceTime }}</td>
+                {% if algo == "prio" %}
+                <td>{{ process.priority }}</td>
+                {% endif %}
+                <td>{{ process.finishT }}</td>
+                <td>{{ process.TAT }}</td>
+                <td>{{ process.WT }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot class="table-group-divider">
+            <tr>
+                <th scope="row">Total</th>
+                <td></td>
+                <td></td>
+                {% if algo == "prio" %}
+                <td></td>
+                {% endif %}
+                <td></td>
+                <td>{{ ttat }}</td>
+                <td>{{ twt }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Average</th>
+                <td></td>
+                <td></td>
+                {% if algo == "prio" %}
+                <td></td>
+                {% endif %}
+                <td></td>
+                <td>{{ atat }}</td>
+                <td>{{ awt }}</td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <a class="btn btn-success disabled" href="/stsStep">Step by step</a>
+    
+{% endblock %}

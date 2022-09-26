@@ -1,14 +1,14 @@
 
 class Process:
     
-    def __init__(self,n,a,s):
+    def __init__(self,n,a,s,p):
         self.name = n
         self.arrivalTime = a
         self.serviceTime = s
 
         self.leftT = s
         self.finishT=0
-        self.priority=1
+        self.priority=p
     
     def execute(self,n):
         if n:
@@ -44,17 +44,24 @@ def displayGanttChart(ganttChart):
         else:
             print(section.sT,'-',section.endT,':',section.process)
 
-def scheduler():
+def scheduler(n,arrT,brrT,al,p):
+    print(p)
+    print(al)
     global pool
     pool = []
     global trt 
     trt = 0
-    n = int(input("Number of processes: "))
     for i in range(n):
-        a = int(input('Enter arrival time: '))
-        b = int(input('Enter burst time: '))
+        a = arrT[i]
+        b = brrT[i]
+
+        if al == "prio":
+            pr = int(p[i])
+        else:
+            pr = 1
+        
         trt += b
-        x = Process('P'+str(i+1),a,b)
+        x = Process('P'+str(i+1),a,b,pr)
         pool.append(x)
     
     # sort pool on basis of arrival time
@@ -95,7 +102,17 @@ def fcfs():
             twt += curProcess.WT
         else:
             g = GanttSection(elapsedTime,elapsedTime+1,'Idle')
+            ganttChart.append(g)
             elapsedTime+=1
+
+    #merge gantt section if idle
+    i=0
+    while i<len(ganttChart)-1:
+        if ganttChart[i].process == ganttChart[i+1].process:
+            ganttChart[i].endT = ganttChart[i+1].endT
+            ganttChart.pop(i+1)
+        else:
+            i+=1
 
     displayGanttChart(ganttChart)
 
@@ -108,6 +125,7 @@ def fcfs():
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
 
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
 def sjf(preemption):
     elapsedTime = 0
 
@@ -163,15 +181,15 @@ def sjf(preemption):
             g = GanttSection(elapsedTime,elapsedTime+1,'Idle')
             elapsedTime+=1
 
-    # merge gantt sections if preemtion is enabled
-    if preemption:
-        i=0
-        while i<len(ganttChart)-1:
-            if ganttChart[i].process == ganttChart[i+1].process:
-                ganttChart[i].endT = ganttChart[i+1].endT
-                ganttChart.pop(i+1)
-            else:
-                i+=1
+    # merge gantt sections
+    
+    i=0
+    while i<len(ganttChart)-1:
+        if ganttChart[i].process == ganttChart[i+1].process:
+            ganttChart[i].endT = ganttChart[i+1].endT
+            ganttChart.pop(i+1)
+        else:
+            i+=1
 
     displayGanttChart(ganttChart)
     
@@ -183,6 +201,8 @@ def sjf(preemption):
     print('Average turnaround time: ',ttat/len(pool))
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
+
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
 
 def priority(preemption):
     elapsedTime = 0
@@ -196,10 +216,6 @@ def priority(preemption):
     curProcess = 0
 
     ganttChart = []
-
-    #set priority
-    for process in pool:
-        process.priority = int(input('Enter priority for '+process.name+': '))
 
 
     while elapsedTime<trt:            
@@ -243,15 +259,14 @@ def priority(preemption):
             g = GanttSection(elapsedTime,elapsedTime+1,'Idle')
             elapsedTime+=1
 
-    # merge gantt sections if preemtion is enabled
-    if preemption:
-        i=0
-        while i<len(ganttChart)-1:
-            if ganttChart[i].process == ganttChart[i+1].process:
-                ganttChart[i].endT = ganttChart[i+1].endT
-                ganttChart.pop(i+1)
-            else:
-                i+=1
+    # merge gantt sections
+    i=0
+    while i<len(ganttChart)-1:
+        if ganttChart[i].process == ganttChart[i+1].process:
+            ganttChart[i].endT = ganttChart[i+1].endT
+            ganttChart.pop(i+1)
+        else:
+            i+=1
 
     displayGanttChart(ganttChart)
     
@@ -263,6 +278,8 @@ def priority(preemption):
     print('Average turnaround time: ',ttat/len(pool))
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
+
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
 
 def rr(q):
     elapedTime = 0
@@ -342,6 +359,7 @@ def rr(q):
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
 
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
 def resetAll():
     for process in pool:
         process.reset()

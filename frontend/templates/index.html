@@ -1,12 +1,74 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STS Algorithm simulations</title>
+    <title>Scheduling Algorithms</title>
+
+    <link rel="stylesheet" href="{% static 'bootstrap-5.2.1-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'bootstrap-5.2.1-dist/js/bootstrap.min.js' %}"></script>
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static '/img/favicon_io/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static '/img/favicon_io/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static '/img/favicon_io/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static '/img/favicon_io/site.webmanifest' %}">
+    
 </head>
 <body>
     
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/">Scheduling Algorithms</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sts">Process Scheduling</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bankers">Banker's Algorithm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/PageRelocationAlgo">Page Relocation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/DiskSchedulingAlgo">Disk Scheduling</a>
+                    </li>
+
+                </ul>
+              </div>
+            </div>
+          </nav>
+    </header>
+
+    <main class="bg-secondary container-fluid p-2">
+        {% block content %}
+
+        <section class="bg-dark rounded text-white p-3 m-2" style="opacity:72%;">
+            <h1 class="display-1">🤖Scheduling Algorithms Simulator Demo</h1>
+            <p class="lead">This webapp will help to easily visualize the working of various scheduling algorithms that we have studied in this semester through animations developed in css and js.
+                <br>The algorithms themselves are programmed in python and their parameters are passed through html forms to the backend using the django webapp framework.
+            </p>
+        </section>
+
+        <section class="bg-dark rounded text-white p-3 m-2" style="opacity:72%;">
+            <h1 class="display-2">Our Team</h1>
+            <p class="lead">This project was a group effort made by: <br>Aarav Rajput - 21MIM10007 - Webapp Development<br>Shreyansh Agarwal - 21BSA10102 - Page Relocation Algorithms<br>Ishaan Arora - 21BAI10081 - Banker's Algorithm<br>Sanya Aroora - 21BSA10059 - Process Scheduling Algorithms<br>Garv Malik - 21BAI10070 - Disk Scheduling Algorithms</p>
+        </section>
+
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'bootstrap-5.2.1-dist/js/bootstrap.min.js' %}"></script>
 </body>
 </html>

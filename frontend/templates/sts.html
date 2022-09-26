@@ -1,0 +1,72 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if invalid is True %}
+        <div class="alert alert-danger" role="alert">Something went wrong. Details : {{msg}}</div>
+    {% endif %}
+    <div class="container-fluid bg-dark rounded p-3 text-white m-1" style="opacity:72%;">
+        <h1 class="display-1">Process Scheduling Algorithms</h1>
+        <hr>
+        <div class=" m-1">
+            <h1 class="display-3 mb-3">Input</h1>
+
+            <form class="row p-2" action="/sts-output/" method="POST" id="STS">
+                {% csrf_token %}
+                <div class="col-2">
+
+                    <label for="algo" class="form-label">Select the algorithm to be implemented</label>
+                    <select id="algo" name="algo" class="form-control mb-3">
+                        <option value="fcfs" selected>FCFS</option>
+                        <option value="sjf">SJF</option>
+                        <option value="prio">Priority</option>
+                        <option value="robin">Round Robin</option>
+                    </select>
+                    
+                    <select name="preempt" id="preempt" class="form-control mb-3" disabled>
+                        <option value="0" selected>Non-Preemptive</option>
+                        <option value="1">Preemptive</option>
+                    </select>
+                    
+                    <label for="quantum" class="form-label">Enter the time quantum</label>
+                    <input type="text" name="quantum" class="form-control" id="quantum" value="disabled" disabled>
+                </div>
+                
+                <div class="col-4">
+                    
+                    
+                    <label for="numProc" class="form-label">Number of Processes (3-9):</label>
+                    <input type="range" class="form-range" min="3" max="9" id="numProc" name="numProc" value="5">
+                    
+                    <label for="arrT" class="form-label">Enter arrival times of processes in order (space separated) : </label>
+                    <input type="text" class="form-control" id="arrT" name="arrT">
+                    
+                    <label for="burstT" class="form-label">Enter burst times of processes in order (space separated) : </label>
+                    <input type="text" class="form-control" id="burstT" name="burstT">
+                    
+                    <label for="prior" class="form-label">Enter priorities of processes in order (space separated) : </label>
+                    <input type="text" class="form-control" id="prior" name="prior" value="disabled" disabled>
+                    
+                    <div class="row">
+                        <div class="col-2 ms-auto">
+
+                            <input type="submit" class="bg-success" value="Submit">
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+        <div class="m-1">
+            <h1 class="display-3 mb-3">Output</h1>
+            {% block output %}
+            {% endblock %}
+        </div>
+    </div>
+    
+    <script src="{% static 'js/sts-form.js' %}"></script>
+
+    
+{% endblock %}
+    
