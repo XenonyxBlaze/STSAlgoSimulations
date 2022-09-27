@@ -10,4 +10,7 @@ urlpatterns = [
     path('DiskSchedulingAlgo/',views.disksched,name="disksched"),
 
     path('sts-output/',views.stsoutput,name="stsoutput"),
+    path('bankers-output/',views.bankersoutput,name="bankersoutput"),
+    path('PageRelocationAlgo-output/',views.pagerelocoutput,name="pagerelocoutput"),
+    # path('DiskSchedulingAlgo-output/',views.diskschedoutput,name="diskschedoutput"),
 ]

@@ -1,1 +1,63 @@
 {% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if invalid is True %}
+        <div class="alert alert-danger" role="alert">Something went wrong. Details : {{msg}}</div>
+    {% endif %}
+
+    <div class="container-fluid bg-dark rounded p-3 text-white m-1" style="opacity:72%">
+        <h1 class="display-1">Banker's Algorithm for Deadlock Avoidance</h1>
+        <hr>
+        <div class="m-1">
+            <h1 class="display-3 mb-3">Input</h1>
+            
+            <form action="/bankers-output/" method="POST" id="bankerForm">
+                {% csrf_token %}
+                <div class="row p-2">
+
+                    <div class="col-2 mx-2">
+                        <label for="numProc" class="form-label">Enter Number of Processes: (3-9)</label>
+                        <input type="range" class="form-range" min="3" max="9" value="5" name="numProc" id="numProc">
+                        <label for="numRes" class="form-label">Enter Number of Resources: (1-5)</label>
+                        <input type="range" class="form-range" min="1" max="5" value="3" name="numRes" id="numRes">
+                        <div>
+                            Using max or need matrix ?
+                            
+                            <select name="man" id="man" class="form-control mb-3">
+                                <option value="max">Max</option>
+                                <option value="need">Need</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2 mx-2">
+                        <label for="allocMat" class="form-label">Enter allocation matrix:</label>
+                        <textarea class="form-control" name="allocMat" id="allocMat" rows="5"></textarea>
+                    </div>
+                    <div class="col-2 mx-2">
+                        <label for="calcMat" class="form-label">Enter max matrix:</label>
+                        <textarea class="row form-control" name="calcMat" id="calcMat" rows="5"></textarea>
+                    </div>
+                    <div class="col-2 mx-2">
+                        <label for="avail" class="form-label">Enter available vector:</label>
+                        <input type="text" class="form-control mb-2" name="avail" id="avail"></input>
+                        <div class="row">
+                            <div class="col-4 ms-auto">
+                                <input type="submit" value="Submit" class="bg-success form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="m-2">
+            <h1 class="display-3 mb-3">Output</h1>
+            {% block output %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/bankerForm.js' %}"></script>
+{% endblock %}

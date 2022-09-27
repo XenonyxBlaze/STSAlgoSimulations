@@ -1,0 +1,42 @@
+{% extends 'pagereloc.html' %}
+
+{% load template_tags %}
+{% load static %}
+
+{% block output %}
+
+    <div class="m-1 ">
+        <div class="d-flex flex-column p-3">
+
+            <h4 class="mx-2">Refference String:<br>
+                {% for r in ref %}
+                {{ r }} 
+                {% endfor %}
+                <br>
+                Number of frames: {{ frames }}
+            </h4>
+        </div>
+        <hr>
+        
+        <div class="d-flex flex-row">
+
+            <div class="d-flex flex-column flex-shrink p-3">
+                <h1>Relocation Table: </h1>
+                <div class="d-flex m-1" id="reloc">
+                    {% for i in n %}
+                    <div class="d-flex flex-column mb-3">
+                        <div class="p-2 fw-bold bg-primary bg-opacity-25 border border-primary border-opacity-75">{{ ref|at_index:i }}</div>
+                        <div class="p-2 fw-bold hm">{{ hmL|at_index:i }}</div>
+                        {% for frame in pageFrames|at_index:i %}
+                        <div class="p-2 fw-bold bg-warning bg-opacity-25 border border-warning border-opacity-75">{{ frame }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <h4 class="mx-2">Number of Faults: {{ pageFaults }}</h4>
+    </div>
+
+    <script src="{% static 'js/relocTableStyling.js' %}"></script>
+{% endblock %}

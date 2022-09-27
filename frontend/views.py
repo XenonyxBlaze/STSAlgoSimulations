@@ -22,7 +22,7 @@ from . import stsAlgos
 
 def stsoutput(request):
     if request.method=="POST":
-        # try:
+        try:
 
             algo = request.POST.get('algo')
             print(algo)
@@ -71,8 +71,84 @@ def stsoutput(request):
             
             return render(request, 'stsoutput.html',context={'invalid':False,'algo':algo,'gantt':stsReturn['gantt'],'pool':stsReturn['pool'],'ttat':stsReturn['ttat'],'twt':stsReturn['twt'],'atat':stsReturn['atat'],'awt':stsReturn['awt']})
 
-        # except Exception as e:
-        #     print('Invalid form\n',e)
-        #     return render(request,'sts.html',context={'invalid':True,'msg':e})
+        except Exception as e:
+            print('Invalid form\n',e)
+            return render(request,'sts.html',context={'invalid':True,'msg':e})
     else:
         return redirect('sts')
+
+from . import bankersAlgo
+
+def bankersoutput(request):
+    if request.method=="POST":
+        try:
+            n = int(request.POST.get('numProc'))
+            print(n)
+            nR = int(request.POST.get('numRes'))
+            print(nR)
+            alloc = list(request.POST.get('allocMat').split('\r\n'))
+            if len(alloc) != n:
+                raise Exception('Bad Input for allocation')
+            print(alloc)
+            for i in range(n):
+                alloc[i] = list(map(int, alloc[i].split()))
+                if len(alloc[i]) != nR:
+                    raise Exception('Bad Input for allocation')
+            print(alloc)
+
+            c = request.POST.get('man')
+
+            cm = list(request.POST.get('calcMat').split('\r\n'))
+            if len(cm) != n:
+                raise Exception('Bad Input for max')
+            print(cm)
+            for i in range(n):
+                cm[i] = list(map(int, cm[i].split()))
+                if len(cm[i]) != nR:
+                    raise Exception('Bad Input for max')
+            print(cm)
+
+            avail = list(map(int,request.POST.get('avail').split()))
+            if len(avail) != nR:
+                raise Exception('Bad Input for available')
+            print(avail)
+
+            bankersAlgo.procMan(n, nR, alloc, c, cm, avail)
+            bankersReturn = bankersAlgo.banker()
+            return render(request, 'bankerout.html',context={'invalid':False,'n':range(n),'nR':range(nR),'alloc':alloc,'need':bankersReturn['need'],'safe':bankersReturn['safe'],'work':bankersReturn['work']})
+
+        except Exception as e:
+            print('Invalid form\n',e)
+            return render(request,'banker.html',context={'invalid':True,'msg':e})
+    else:
+        return redirect('bankers')
+
+from . import pageReloc
+
+def pagerelocoutput(request):
+    if request.method=="POST":
+        try:
+            n = int(request.POST.get('numFrames'))
+            print(n)
+            ref = list(map(int,request.POST.get('refStr').split()))
+            print(ref)
+            algo = request.POST.get('algo')
+            print(algo)
+            if algo == 'fifo':
+                pageReloc.framMan(n, ref)
+                pageRelocReturn = pageReloc.fifo()
+            elif algo == 'lru':
+                pageReloc.framMan(n, ref)
+                pageRelocReturn = pageReloc.LRU()
+            elif algo == 'optimal':
+                pageReloc.framMan(n, ref)
+                pageRelocReturn = pageReloc.optimal()
+            else:
+                raise Exception('Bad Input for algo')
+            return render(request, 'pagerelocout.html',context={'invalid':False,'algo':algo,'ref':ref,'frames':n,'nf':range(n),'n':range(len(ref)),'pageFaults':pageRelocReturn['pageFaults'],'hmL':pageRelocReturn['hm'],'pageFrames':pageRelocReturn['pageFrames']})
+
+        except Exception as e:
+            print('Invalid form\n',e)
+            return render(request,'pagereloc.html',context={'invalid':True,'msg':e})
+    else:
+        return redirect('pagereloc')
