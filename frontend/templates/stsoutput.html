@@ -1,11 +1,13 @@
 {% extends 'sts.html' %}
 
 {% block output %}
+
+    <h1>Algo: {{ algo }}</h1>
     
     <h1>Gantt Chart:</h1>
-    <div class="d-flex flex-wrap mb-3 mx-5 justify-content-between bg-info">
+    <div class="d-flex flex-wrap mb-3 mx-5 justify-content-between">
         {% for section in gantt %}
-        <div class="d-flex flex-fill mt-1 mb-1 mx-1 p-2 bg-primary">
+        <div class="d-flex flex-fill mt-1 mb-1 mx-1 p-2 bg-primary bg-opacity-25 border border-primary">
 
             <sub class="me-3 align-self-end">{{ section.sT }}</sub>
             <h5 class="align-self-center text-center flex-fill">
@@ -78,6 +80,50 @@
         </tfoot>
     </table>
     
-    <a class="btn btn-success disabled" href="/stsStep">Step by step</a>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#CPUStepper">Step by step</button>
+    <div class="modal fade" id="CPUStepper" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title text-success" id="modalLabel">
+                        Step by step analysis
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-white">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Elapsed Time</th>
+                                <th scope="col">Process</th>
+                                <th scope="col">Ready Queue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for step in steps %}
+                            <tr>
+                                <td>{{ step.elapsedTime }}</td>
+                                <td>
+                                    {% if step.process == "IDLE" %}
+                                    {{ step.process }}
+                                    {% else %}
+                                    {{ step.process.name }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for process in step.readyQ %}
+                                        {{ process }}
+                                    {% endfor %}
+                                </td>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+                </div>
+            </div>
+        </div>
+    </div>
     
 {% endblock %}

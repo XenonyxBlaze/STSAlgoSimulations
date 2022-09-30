@@ -1,0 +1,47 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    {% if invalid is True %}
+        <div class="alert alert-danger" role="alert">Something went wrong. Details : {{msg}}</div>
+    {% endif %}
+
+    <div class="container-fluid bg-dark rounded p-3 text-white m-1" style="opacity:72%">
+
+        <h1 class="display-1">Disk Scheduling Algorithms</h1>
+        <hr>
+        <div class="m-1">
+            <h1 class="display-3">Input</h1>
+            <form action="/DiskSchedulingAlgo-output/" method="POST">
+                {% csrf_token %}
+                <div class="col-2">
+                    <label for="algo" class="form-label">Select algorithm: </label>
+                    <select name="algo" id="algo" class="form-control">
+                        <option value="fcfs">FCFS</option>
+                        <option value="sstf">SSTF</option>
+                        <option value="scan">SCAN</option>
+                        <option value="cscan">C-SCAN</option>
+                        <option value="look">LOOK</option>
+                        <option value="clook">C-LOOK</option>
+                    </select>
+                    <label for="refStr" class="form-label">Disk requests (space separated):</label>
+                    <input type="text" class="form-control" name="refStr" id="refStr">
+                    <label for="header" class="form-label">Head: </label>
+                    <input type="text" class="form-control" name="header" id="header">
+                    <div class="col-3 ms-auto">
+                        <input type="submit" value="Submit" class="form-control mt-3 bg-success">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <hr>
+        <div class="m-1">
+            <h1 class="display-3">Output</h1>
+            {% block output %}
+            {% endblock %}
+        </div>
+    </div>
+
+{% endblock %}

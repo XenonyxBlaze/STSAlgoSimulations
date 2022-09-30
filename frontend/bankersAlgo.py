@@ -24,6 +24,7 @@ def procMan(n,nR,a,c,cm,avail):
     availMatrix = avail
 
 
+
 def banker():
     workStates = []
     safeSeq = []
@@ -47,19 +48,19 @@ def banker():
         print("Unsafe state")
 
 
-def resourceReq():
-    proc = int(input("Enter process number: "))
-    req = list(map(int, input("Enter request: ").split()))
-    if all([req[i] <= needMatrix[proc][i] for i in range(len(req))]):
-        if all([req[i] <= availMatrix[i] for i in range(len(req))]):
-            availMatrix = [availMatrix[i] - req[i] for i in range(len(req))]
-            allocMatrix[proc] = [allocMatrix[proc][i] + req[i] for i in range(len(req))]
-            needMatrix[proc] = [needMatrix[proc][i] - req[i] for i in range(len(req))]
-            banker()
-        else:
-            print("Request cannot be granted")
-    else:
-        print("Request cannot be granted")
+# def resourceReq():
+#     proc = int(input("Enter process number: "))
+#     req = list(map(int, input("Enter request: ").split()))
+#     if all([req[i] <= needMatrix[proc][i] for i in range(len(req))]):
+#         if all([req[i] <= availMatrix[i] for i in range(len(req))]):
+#             availMatrix = [availMatrix[i] - req[i] for i in range(len(req))]
+#             allocMatrix[proc] = [allocMatrix[proc][i] + req[i] for i in range(len(req))]
+#             needMatrix[proc] = [needMatrix[proc][i] - req[i] for i in range(len(req))]
+#             banker()
+#         else:
+#             print("Request cannot be granted")
+#     else:
+#         print("Request cannot be granted")
 
 def main():
     procMan()

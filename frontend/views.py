@@ -16,7 +16,7 @@ def pagereloc(request):
     return render(request, 'pagereloc.html')
 
 def disksched(request):
-    return render(request, 'diskScheduler.html')
+    return render(request, 'disk.html')
 
 from . import stsAlgos
 
@@ -55,21 +55,25 @@ def stsoutput(request):
 
             if algo == 'fcfs':
                 stsAlgos.scheduler(n, arrT, burstT, algo, None)
+                algo = "First Come First Serve (FCFS)"
                 stsReturn = stsAlgos.fcfs()
             elif algo == 'sjf':
                 stsAlgos.scheduler(n, arrT, burstT, algo, None)
+                algo = "Shortest Job First (SJF) with preemption: "+str(preempt)
                 stsReturn = stsAlgos.sjf(preempt)
             elif algo == 'prio':
                 stsAlgos.scheduler(n, arrT, burstT, algo, prio)
+                algo = "Priority with preemption: "+str(preempt)
                 stsReturn = stsAlgos.priority(preempt)
             elif algo == 'robin':
                 stsAlgos.scheduler(n, arrT, burstT, algo, None)
+                algo = "Round Robin (RR) with quantum: "+str(quantum)
                 stsReturn = stsAlgos.rr(quantum)
             else:
                 raise Exception('Bad Input for algo')
             
             
-            return render(request, 'stsoutput.html',context={'invalid':False,'algo':algo,'gantt':stsReturn['gantt'],'pool':stsReturn['pool'],'ttat':stsReturn['ttat'],'twt':stsReturn['twt'],'atat':stsReturn['atat'],'awt':stsReturn['awt']})
+            return render(request, 'stsoutput.html',context={'invalid':False,'algo':algo,'gantt':stsReturn['gantt'],'pool':stsReturn['pool'],'ttat':stsReturn['ttat'],'twt':stsReturn['twt'],'atat':stsReturn['atat'],'awt':stsReturn['awt'],'steps':stsReturn['cpuStates']})
 
         except Exception as e:
             print('Invalid form\n',e)
@@ -152,3 +156,53 @@ def pagerelocoutput(request):
             return render(request,'pagereloc.html',context={'invalid':True,'msg':e})
     else:
         return redirect('pagereloc')
+
+from . import diskScheduling
+
+def diskoutput(request):
+    if request.method=="POST":
+        try:
+            req = list(map(int,request.POST.get('refStr').split()))
+            print(req)
+            head = int(request.POST.get('header'))
+            print(head)
+            algo = request.POST.get('algo')
+            print(algo)
+            if algo == 'fcfs':
+                diskReturn = diskScheduling.FCFS(req,head)
+            elif algo == 'sstf':
+                diskReturn = diskScheduling.SSTF(req,head)
+            elif algo == 'scan':
+                diskReturn = diskScheduling.SCAN(req,head,False)
+            elif algo == 'cscan':
+                diskReturn = diskScheduling.SCAN(req,head,True)
+            # elif algo == 'look':
+            #     diskReturn = diskScheduling.look()
+            # elif algo == 'clook':
+            #     diskReturn = diskScheduling.clook()
+            else:
+                raise Exception('Bad Input for algo')
+
+            from matplotlib import pyplot as plt
+            
+            x=diskReturn['seq'].copy()
+            x.reverse()
+            y=list(range(len(x)))
+            # y.reverse()
+
+            plt.plot(x,y,marker="o" ,ls="--")
+            plt.xticks(x)
+            ax = plt.gca()
+            # ax.get_xaxis().set_visible(False)
+            ax.get_yaxis().set_visible(False)
+
+            plt.savefig('static/img/disk.png')
+            plt.close()
+
+            return render(request, 'diskout.html',context={'invalid':False,'algo':algo,'req':req,'head':head,'seek':diskReturn['seek'],'seq':diskReturn['seq']})
+
+        except Exception as e:
+            print('Invalid form\n',e)
+            return render(request,'disk.html',context={'invalid':True,'msg':e})
+    else:
+        return redirect('disk')

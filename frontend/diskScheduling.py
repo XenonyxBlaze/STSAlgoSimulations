@@ -1,5 +1,6 @@
 
 def FCFS(dr,h):
+    seq = []
     diskReqs = dr
     head = h
     print('----------------------------------------------------------------------------')
@@ -8,6 +9,7 @@ def FCFS(dr,h):
     total = 0
     for i in range(len(diskReqs)):
         print(diskReqs[i],end='\t|\t')
+        seq.append(diskReqs[i])
         if diskReqs[i] == head:
             continue
         else:
@@ -17,7 +19,10 @@ def FCFS(dr,h):
     
     print('\n\nTotal head movement in FCFS policy : ',total,'\n\n\n\n')
 
+    return({'seq':seq,'seek':total})
+
 def SSTF(dr,h):
+    seq=[]
     diskReqs = dr.copy()
     head = h
     print('----------------------------------------------------------------------------')
@@ -36,6 +41,7 @@ def SSTF(dr,h):
                 def2 = abs(diskReqs[j-1]-head)
                 if def1<def2:
                     print(diskReqs[j],end='\t|\t')
+                    seq.append(diskReqs[j])
                     print(def1)
                     total += def1
                     head = diskReqs[j]
@@ -43,6 +49,7 @@ def SSTF(dr,h):
                     break
                 else:
                     print(diskReqs[j-1],end='\t|\t')
+                    seq.append(diskReqs[j-1])
                     print(def2)
                     total += def2
                     head = diskReqs[j-1]
@@ -50,6 +57,8 @@ def SSTF(dr,h):
                     break
 
     print('\n\nTotal head movement in SSTF policy : ',total,'\n\n\n\n')
+
+    return({'seek':total,'seq':seq})
 
 def binSearch(arr,x):
     
@@ -68,15 +77,12 @@ def binSearch(arr,x):
     return low
 
 def SCAN(dr,h,c):
+    seq=[]
     head = h
     diskReqs = dr.copy()
-    order = input("(D)escending order ?")
     total = 0
     diskReqs.sort()
     split = binSearch(diskReqs,head)
-    if order == "D":
-        diskReqs.reverse()
-        split = len(diskReqs)-split
 
     f = diskReqs[split:]
     b = diskReqs[:split]
@@ -94,6 +100,7 @@ def SCAN(dr,h,c):
     
     for i in range(len(diskReqs)):
         print(diskReqs[i],end='\t|\t')
+        seq.append(diskReqs[i])
         if diskReqs[i] == head:
             continue
         else:
@@ -104,11 +111,4 @@ def SCAN(dr,h,c):
     x = lambda c: 'C-' if c else ''
     print('\n\nTotal head movement in',x(c),'SCAN policy : ',total,'\n\n\n\n')
 
-
-diskReqs = list(map(int, input('Enter disk requests: ').split()))
-head = int(input('Enter initial head position: '))
-
-FCFS(diskReqs,head)
-SSTF(diskReqs,head)
-SCAN(diskReqs,head,False)
-SCAN(diskReqs,head,True)
+    return({'seq':seq,'seek':total})

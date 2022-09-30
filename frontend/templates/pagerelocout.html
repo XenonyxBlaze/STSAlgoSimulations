@@ -7,8 +7,9 @@
 
     <div class="m-1 ">
         <div class="d-flex flex-column p-3">
+            <h4 class="mx-2">Algorithm: {{ algo }}</h4>
 
-            <h4 class="mx-2">Refference String:<br>
+            <h4 class="mx-2">Refference String: 
                 {% for r in ref %}
                 {{ r }} 
                 {% endfor %}
@@ -21,7 +22,7 @@
         <div class="d-flex flex-row">
 
             <div class="d-flex flex-column flex-shrink p-3">
-                <h1>Relocation Table: </h1>
+                <h1>Replacement Table: </h1>
                 <div class="d-flex m-1" id="reloc">
                     {% for i in n %}
                     <div class="d-flex flex-column mb-3">

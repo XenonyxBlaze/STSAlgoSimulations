@@ -11,11 +11,11 @@ def fifo():
     frames = []
     hm=[]
     faults = 0
-    print('----------------------------------------------------------------------------')
-    print('Page\t|\tH/M\t|\tMemory State')
-    print('----------------------------------------------------------------------------')
+    # print('----------------------------------------------------------------------------')
+    # print('Page\t|\tH/M\t|\tMemory State')
+    # print('----------------------------------------------------------------------------')
     for i in range(len(ref)):
-        print(ref[i],end='\t|\t')
+        # print(ref[i],end='\t|\t')
         if len(frames)<n:
             frames.append(ref[i])
             frameStates.append(frames.copy())
@@ -32,11 +32,11 @@ def fifo():
                 frames.append(ref[i])
                 frameStates.append(frames.copy())
         
-        print('Miss\t|\t',frames)
+        # print('Miss\t|\t',frames)
         hm.append('M')
 
-    print('\n\nNumber of page faults in FIFO policy : ',faults,'\n\n\n\n')
-    print(frameStates)
+    # print('\n\nNumber of page faults in FIFO policy : ',faults,'\n\n\n\n')
+    # print(frameStates)
 
     return({'pageFaults':faults,'pageFrames':frameStates,'hm':hm})
 
@@ -45,9 +45,9 @@ def LRU():
     frames = []
     faults = 0
     hm = []
-    print('----------------------------------------------------------------------------')
-    print('Page\t|\tH/M\t|\tMemory State')
-    print('----------------------------------------------------------------------------')
+    # print('----------------------------------------------------------------------------')
+    # print('Page\t|\tH/M\t|\tMemory State')
+    # print('----------------------------------------------------------------------------')
     for i in range(len(ref)):
         print(ref[i],end='\t|\t')
         if len(frames)<n:
@@ -68,10 +68,10 @@ def LRU():
                 frameStates.append(frames.copy())
                 faults += 1
         
-        print('Miss\t|\t',frames)
+        # print('Miss\t|\t',frames)
         hm.append('M')
     
-    print('\n\nNumber of faults in LRU policy : ',faults,'\n\n\n\n')
+    # print('\n\nNumber of faults in LRU policy : ',faults,'\n\n\n\n')
     return({'pageFaults':faults,'pageFrames':frameStates,'hm':hm})
 
 def optimal():
@@ -79,9 +79,9 @@ def optimal():
     frames = []
     faults = 0
     hm = []
-    print('----------------------------------------------------------------------------')
-    print('Page\t|\tH/M\t|\tMemory State')
-    print('----------------------------------------------------------------------------')
+    # print('----------------------------------------------------------------------------')
+    # print('Page\t|\tH/M\t|\tMemory State')
+    # print('----------------------------------------------------------------------------')
     for i in range(len(ref)):
         print(ref[i],end='\t|\t')
         if len(frames)<n:
@@ -119,7 +119,7 @@ def optimal():
                     frames.append(ref[i])
                     frameStates.append(frames.copy())
                     faults += 1
-        print('Miss\t|\t',frames)
+        # print('Miss\t|\t',frames)
         hm.append('M')
-    print('\n\nNumber of faults in optimal policy : ',faults,'\n\n\n\n')
+    # print('\n\nNumber of faults in optimal policy : ',faults,'\n\n\n\n')
     return({'pageFaults':faults,'pageFrames':frameStates,'hm':hm})

@@ -36,6 +36,13 @@ class GanttSection:
         self.endT = e
         self.process = p
 
+class cpuState:
+    def __init__(self,process,elapsedTime,readyQ):
+        self.elapsedTime = elapsedTime
+        self.process = process
+        self.readyQ = readyQ
+
+
 def displayGanttChart(ganttChart):
     print('Gantt Chart: ')
     for section in ganttChart:
@@ -43,6 +50,14 @@ def displayGanttChart(ganttChart):
             print(section.sT,'-',section.endT,':',section.process.name)
         else:
             print(section.sT,'-',section.endT,':',section.process)
+
+def displayCpuStates(cpuStates):
+    print('CPU States: ')
+    for state in cpuStates:
+        if not type(state.process) == Process:
+            print(state.elapsedTime,' ',state.process,' ',state.readyQ)
+        else:
+            print(state.elapsedTime,' ',state.process.name,' ',state.readyQ)
 
 def scheduler(n,arrT,brrT,al,p):
     print(p)
@@ -69,6 +84,8 @@ def scheduler(n,arrT,brrT,al,p):
 
 def fcfs():
 
+    cpuStates = []
+
     elapsedTime = 0
 
     ttat=0
@@ -82,12 +99,17 @@ def fcfs():
     ganttChart = []
 
     while elapsedTime<trt:
+
+
         for process in pool[arrivalIndex:]:
             if process.arrivalTime <= elapsedTime:
                 readyQ.append(process)
                 arrivalIndex+=1
             else:
                 break
+
+        cpustate = cpuState(curProcess,elapsedTime,readyQ)
+        cpuStates.append(cpustate)
 
         if readyQ:
             curProcess = readyQ.pop(0)
@@ -115,6 +137,7 @@ def fcfs():
             i+=1
 
     displayGanttChart(ganttChart)
+    displayCpuStates(cpuStates)
 
     print('Process\tArrival Time\tBurst Time\tFinish Time\tTurnaround Time\tWaiting Time')
     for process in pool:
@@ -125,8 +148,13 @@ def fcfs():
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
 
-    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool),'cpuStates':cpuStates})
+
+
 def sjf(preemption):
+
+    cpuStates = []
+
     elapsedTime = 0
 
     ttat=0
@@ -141,6 +169,7 @@ def sjf(preemption):
 
     while elapsedTime<trt:            
         # prepare readyQ for processes that are ready to be executed
+
         
         for process in pool[arrivalIndex:]:
             if process.arrivalTime <= elapsedTime:
@@ -149,6 +178,9 @@ def sjf(preemption):
             else:
                 break
         
+        cpustate = cpuState(curProcess,elapsedTime,list(map(lambda x: x.name,readyQ.copy())))
+        cpuStates.append(cpustate)
+
         if readyQ:
             readyQ.sort(key=lambda x: x.leftT)
             curProcess = readyQ.pop(0)
@@ -173,10 +205,10 @@ def sjf(preemption):
                 curProcess.tally()
                 ttat += curProcess.TAT
                 twt += curProcess.WT
-                curProcess = 0
+                
             else:
                 readyQ.append(curProcess)
-                curProcess = 0
+                
         else:
             g = GanttSection(elapsedTime,elapsedTime+1,'Idle')
             elapsedTime+=1
@@ -192,7 +224,8 @@ def sjf(preemption):
             i+=1
 
     displayGanttChart(ganttChart)
-    
+    displayCpuStates(cpuStates)
+
     print('Process\tArrival Time\tBurst Time\tFinish Time\tTurnaround Time\tWaiting Time')
     for process in pool:
         print(process.name,'\t',process.arrivalTime,'\t\t',process.serviceTime,'\t\t',process.finishT,'\t\t',process.TAT,'\t\t\t',process.WT)
@@ -202,9 +235,12 @@ def sjf(preemption):
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
 
-    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool),'cpuStates':cpuStates})
 
 def priority(preemption):
+
+    cpuStates = []
+
     elapsedTime = 0
 
     ttat=0
@@ -226,6 +262,9 @@ def priority(preemption):
                 arrivalIndex+=1
             else:
                 break
+
+        cpustate = cpuState(curProcess,elapsedTime,list(map(lambda x: x.name,readyQ.copy())))
+        cpuStates.append(cpustate)
         
         if readyQ:
             readyQ.sort(key=lambda x: x.priority)
@@ -269,6 +308,7 @@ def priority(preemption):
             i+=1
 
     displayGanttChart(ganttChart)
+    displayCpuStates(cpuStates)
     
     print('Process\tArrival Time\tBurst Time\tFinish Time\tTurnaround Time\tWaiting Time')
     for process in pool:
@@ -279,9 +319,12 @@ def priority(preemption):
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
 
-    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool),'cpuStates':cpuStates})
 
 def rr(q):
+
+    cpuStates = []
+
     elapedTime = 0
 
     ttat=0
@@ -306,6 +349,9 @@ def rr(q):
                 arrivalIndex+=1
             else:
                 break
+
+        cpustate = cpuState(curProcess,elapedTime,list(map(lambda x: x.name,readyQ.copy())))
+        cpuStates.append(cpustate)
             
 
         if readyQ:
@@ -349,6 +395,7 @@ def rr(q):
             i+=1
 
     displayGanttChart(ganttChart)
+    displayCpuStates(cpuStates)
 
     print('Process\tArrival Time\tBurst Time\tFinish Time\tTurnaround Time\tWaiting Time')
     for process in pool:
@@ -359,7 +406,7 @@ def rr(q):
     print('Total waiting time: ',twt)
     print('Average waiting time: ',twt/len(pool))
 
-    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool)})
+    return({'trt':trt,'pool':pool,'gantt':ganttChart,'ttat':ttat,'twt':twt,'atat':ttat/len(pool),'awt':twt/len(pool),'cpuStates':cpuStates})
 def resetAll():
     for process in pool:
         process.reset()

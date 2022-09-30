@@ -1,0 +1,27 @@
+{% extends 'disk.html' %}
+{% load static %}
+
+{% block output %}
+    <div class="m-1">
+        <h4>Algorithm : {{ algo }} <br>
+            Disk Requests : {% for diskCall in req %} {{ diskCall }} {% endfor %} <br>
+            Head : {{ head }}
+        </h4>
+        <hr>
+        <div class="d-flex flex-row">
+            <div class="d-flex flex-column p-3">
+                <h4>Seek Sequence: </h4>
+                <div class="d-flex m-1">
+                    {% for ds in seq %}
+                    <div class="p-2 fw-bold bg-warning bg-opacity-25 border border-warning border-opacity-75">{{ ds }}</div>
+                    {% endfor %}
+                </div>
+                <h4>Plot: </h4>
+                <div class="d-flex m-1">
+                    <img src="{% static 'img/disk.png'%}" alt="">
+                </div>
+                <h4>Total head movement: {{seek}}</h4>
+            </div>
+        </div>
+    </div>
+{% endblock %}

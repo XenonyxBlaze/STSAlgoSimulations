@@ -7,10 +7,10 @@ urlpatterns = [
     path('sts/',views.sts,name="sts"),
     path('bankers/',views.bankers,name="bankers"),
     path('PageRelocationAlgo/',views.pagereloc,name="pagereloc"),
-    path('DiskSchedulingAlgo/',views.disksched,name="disksched"),
+    path('disk/',views.disksched,name="disksched"),
 
     path('sts-output/',views.stsoutput,name="stsoutput"),
     path('bankers-output/',views.bankersoutput,name="bankersoutput"),
     path('PageRelocationAlgo-output/',views.pagerelocoutput,name="pagerelocoutput"),
-    # path('DiskSchedulingAlgo-output/',views.diskschedoutput,name="diskschedoutput"),
+    path('DiskSchedulingAlgo-output/',views.diskoutput,name="diskoutput"),
 ]
